@@ -1,8 +1,10 @@
 package com.example.account.util.controller;
 
+import com.example.account.util.dto.MemberLoginDto;
 import com.example.account.util.dto.MemberSignupDto;
 import com.example.account.util.response.CustomApiResponse;
 import com.example.account.util.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,10 @@ public class MemberController {
     }
 
     // 로그인
-
+    @PostMapping("login")
+    public ResponseEntity<CustomApiResponse<?>> login(@Valid @RequestBody MemberLoginDto dto) {
+        ResponseEntity<CustomApiResponse<?>> result = memberService.login(dto);
+        return result;
+    }
     // 회원탈퇴
 }
