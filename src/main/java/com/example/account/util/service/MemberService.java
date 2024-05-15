@@ -32,7 +32,7 @@ public class MemberService {
         // 동일한 userId 없으면 회원가입
         Members newMember = Members.builder()
                 .userId(dto.getUserId())
-                .password(dto.getUserId())
+                .password(dto.getPassword())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .build();
@@ -41,8 +41,8 @@ public class MemberService {
         memberRepository.save(newMember);
 
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "회원가입에 성공했습니다."));
+                .status(HttpStatus.CREATED)
+                .body(CustomApiResponse.createSuccess(HttpStatus.CREATED.value(), null, "회원가입에 성공하였습니다."));
     }
 
     public ResponseEntity<CustomApiResponse<?>> login(MemberLoginDto dto) {

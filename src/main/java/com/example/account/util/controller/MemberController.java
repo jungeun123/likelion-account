@@ -18,7 +18,7 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("sign-up")
-    public ResponseEntity<CustomApiResponse<?>> signup(@RequestBody MemberSignupDto dto) {
+    public ResponseEntity<CustomApiResponse<?>> signup(@Valid @RequestBody MemberSignupDto dto) {
         ResponseEntity<CustomApiResponse<?>> result = memberService.signup(dto);
         return result;
     }
