@@ -3,6 +3,7 @@ package com.example.account.util.service;
 import com.example.account.util.domain.Members;
 import com.example.account.util.dto.MemberLoginDto;
 import com.example.account.util.dto.MemberSignupDto;
+import com.example.account.util.dto.MemberWithdrawDto;
 import com.example.account.util.repository.MemberRepository;
 import com.example.account.util.response.CustomApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -64,4 +65,21 @@ public class MemberService {
                 .status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "로그인에 성공했습니다."));
     }
+
+    public ResponseEntity<CustomApiResponse<?>> withdraw(MemberWithdrawDto dto) {
+        Optional<Members> byUserId = memberRepository.findByUserId(dto.getUserId());
+
+        if(byUserId.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.NOT_FOUND.value(), "id가" + dto.getUserId() +"인 회원은 존재하지 않습니다."));
+        }
+
+        memberRepository.delete(byUserId.get());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "회원이 정상적으로 탈퇴되었습니다."));
+    }
 }
+
