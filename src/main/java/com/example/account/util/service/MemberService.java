@@ -47,18 +47,18 @@ public class MemberService {
 
     public ResponseEntity<CustomApiResponse<?>> login(MemberLoginDto dto) {
         Optional<Members> byUserId = memberRepository.findByUserId(dto.getUserId());
-        Optional<Members> byPassword = memberRepository.findByUserId(dto.getPassword());
 
         if(byUserId.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 회원입니다."));
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다."));
         }
 
-        else if(byPassword.isEmpty()){
+        Members member = byUserId.get();
+        if(!member.getPassword().equals(dto.getPassword())){
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.BAD_REQUEST.value(), "비밀번호가 일치하지 않습니다."));
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 일치하지 않습니다."));
         }
 
         return ResponseEntity
