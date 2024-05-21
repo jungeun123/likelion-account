@@ -1,20 +1,19 @@
-package com.example.account.util.controller;
+package com.example.account.accounts.controller;
 
-import com.example.account.util.dto.MemberLoginDto;
-import com.example.account.util.dto.MemberSignupDto;
-import com.example.account.util.dto.MemberWithdrawDto;
+import com.example.account.accounts.dto.MemberLoginDto;
+import com.example.account.accounts.dto.MemberSignupDto;
+import com.example.account.accounts.service.MemberService;
 import com.example.account.util.response.CustomApiResponse;
-import com.example.account.util.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("api/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private  final MemberService memberService;
+    private final MemberService memberService;
 
     // 회원가입
     @PostMapping("sign-up")
@@ -33,8 +32,7 @@ public class MemberController {
     // 회원탈퇴
     @DeleteMapping("withdraw/{userId}")
     public ResponseEntity<CustomApiResponse<?>> withdraw(@PathVariable String userId) {
-        MemberWithdrawDto dto = new MemberWithdrawDto(userId);
-        ResponseEntity<CustomApiResponse<?>> result = memberService.withdraw(dto);
+        ResponseEntity<CustomApiResponse<?>> result = memberService.withdraw(userId);
         return result;
     }
 }

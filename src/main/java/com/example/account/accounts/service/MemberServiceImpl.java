@@ -1,21 +1,23 @@
-package com.example.account.util.service;
+package com.example.account.accounts.service;
 
-import com.example.account.util.domain.Members;
-import com.example.account.util.dto.MemberLoginDto;
-import com.example.account.util.dto.MemberSignupDto;
-import com.example.account.util.dto.MemberWithdrawDto;
-import com.example.account.util.repository.MemberRepository;
+import com.example.account.domain.Members;
+import com.example.account.accounts.dto.MemberLoginDto;
+import com.example.account.accounts.dto.MemberSignupDto;
+import com.example.account.accounts.repository.MemberRepository;
 import com.example.account.util.response.CustomApiResponse;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+@Builder
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     public ResponseEntity<CustomApiResponse<?>> signup(MemberSignupDto dto) {
@@ -66,13 +68,13 @@ public class MemberService {
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "로그인에 성공했습니다."));
     }
 
-    public ResponseEntity<CustomApiResponse<?>> withdraw(MemberWithdrawDto dto) {
-        Optional<Members> byUserId = memberRepository.findByUserId(dto.getUserId());
+    public ResponseEntity<CustomApiResponse<?>> withdraw(@PathVariable String userId) {
+        Optional<Members> byUserId = memberRepository.findByUserId(userId);
 
         if(byUserId.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.NOT_FOUND.value(), "id가" + dto.getUserId() +"인 회원은 존재하지 않습니다."));
+                    .body(CustomApiResponse.createFailWithoutData(HttpStatus.NOT_FOUND.value(), "id가" + userId +"인 회원은 존재하지 않습니다."));
         }
 
         memberRepository.delete(byUserId.get());
